@@ -1,0 +1,18 @@
+@startuml flow1
+<style>
+activityDiagram {
+  BackgroundColor #FFFF00
+  BorderColor #33668E
+  FontColor #000000
+  FontName arial
+}
+
+document {
+   BackgroundColor gray
+}
+</style>
+:STEPS TO TRAIN CNN / RNN;
+repeat :1 INSTALL AND IMPORT;
+backward :Transformes, datasets, evaluate, accelerate, pprint, logging;
+repeat while (All done?) is (No) not (Yes)
+@enduml
