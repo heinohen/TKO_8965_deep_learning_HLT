@@ -2,6 +2,8 @@
 
 Your task is to carefully study the notebooks, and write a step-by-step summary of key steps to train and evaluate such a model. Keep in mind that many of these steps will be applicable throughout the course, even if the specific model differs. Therefore, it is essential to grasp the key concepts. As most of the code is shared in these two notebooks, writing just one summary is enough, but in the model building part, you should refer to both CNN/RNN implementations.
 
+<img src="out/full/full.png" alt="full" width="600" height="800" />
+
 ## 1 Install and import
 
 ![image info](out/flow1/flow1.png)
@@ -113,11 +115,13 @@ def tokenizer(dataset_entry: dict) --> dict:
 dataset = dataset.map(tokenizer)
 ```
 
-## 4 BUILD THE MODEL
+## 4 BUILD, CONFIGURE, TRAIN
+
+CNN STARTS HERE
 
 ### CNN
 
-![image info](out/flow4/flow4.png)
+![image info](out/cnn1/cnn1.png)
 
 ```python
 import torch
@@ -180,3 +184,176 @@ BasicConfig = transformers.PretrainedConfig #nice way to start
     ```python
     self.loss = torch.nn.CrossEntropyLoss()
     ```
+
+* `forward` passes to the next layer or returns output
+
+### CONFIGURE
+
+![image info](out/cnn2/cnn2.png)
+
+1) `vocab_size` is always the size of the tokenizer
+2) `num_labels` is *number of unique labels* in the data
+3) `optional` are adjustable hyperparameters of which:
+    * `embedding_dim` is the size of the word embeddings (token)
+    * `filter_size` the size of the convolution filter (for picture think of height x width window) here only one dimension height (*n-grams*)
+    ![ngram](ngram.png)
+    * `num_filters` COUNT of different convolution filters
+
+### TRAIN
+
+![traing](out/cnn3/cnn3.png)
+
+#### Training arguments
+
+Use hf `trainer` class
+
+workflow:
+
+* load the arguments that control the training
+* configurable metrics to evaluate performance
+* data collator builds the batches
+* early stopping callback stops when eval loss no longer improves
+
+Specify hyperparamenters and other settings for training
+
+* `learning_rate` the step size for weight updates
+* `per_device_train_batch_size` number of examples per batch
+* `max_steps` the max number of steps to train for
+
+```python
+# https://huggingface.co/docs/transformers/en/main_classes/trainer
+trainer_args = transformers.TrainingArguments(
+    "checkpoints",
+    evaluation_strategy="steps",
+    """
+    eval_strategy (str or IntervalStrategy, optional, defaults to "no") — The evaluation strategy to adopt during training. Possible values are:
+    "no": No evaluation is done during training.
+    "steps": Evaluation is done (and logged) every eval_steps.
+    "epoch": Evaluation is done at the end of each epoch.
+    """
+    logging_strategy="steps",
+    """
+    logging_strategy (str or IntervalStrategy, optional, defaults to "steps") — The logging strategy to adopt during training. Possible values are:
+
+    "no": No logging is done during training.
+    "epoch": Logging is done at the end of each epoch.
+    "steps": Logging is done every logging_steps.
+    """
+    load_best_model_at_end=True,
+    """
+    (bool, optional, defaults to False) — Whether or not to load the best model found during training at the end of training. When this option is enabled, the best checkpoint will always be saved. See save_total_limit for more.
+    """
+    eval_steps=500,
+    """
+    (int or float, optional) — Number of update steps between two evaluations if eval_strategy="steps". Will default to the same value as logging_steps if not set. Should be an integer or a float in range [0,1). If smaller than 1, will be interpreted as ratio of total training steps.
+    """
+    logging_steps=500,
+    """
+    (int or float, optional, defaults to 500) — Number of update steps between two logs if logging_strategy="steps". Should be an integer or a float in range [0,1). If smaller than 1, will be interpreted as ratio of total training steps.
+    """
+    learning_rate=0.001,
+    """
+    (float, optional, defaults to 5e-5) — The initial learning rate for AdamW optimizer.
+    """
+    per_device_train_batch_size=8,
+    """
+    (int, optional, defaults to 8) — The batch size per GPU/XPU/TPU/MPS/NPU core/CPU for training.
+    """
+    max_steps=2500,
+    """
+    (int, optional, defaults to -1) — If set to a positive number, the total number of training steps to perform. Overrides num_train_epochs. For a finite dataset, training is reiterated through the dataset (if all data is exhausted) until max_steps is reached.
+    """
+)
+```
+
+#### Evaluation
+
+Create metric for evaluation of performance during and after training.
+
+```python
+#https://pypi.org/project/evaluate/
+import evaluate
+
+#https://huggingface.co/spaces/evaluate-metric/accuracy
+#Accuracy = (TP + TN) / (TP + TN + FP + FN)
+accuracy = evaluate.load("accuracy")
+"""
+to instantiate an evaluation module
+"""
+
+def compute_accuracy(outputs_and_labels):
+    outputs, labels = outputs_and_labels
+    predictions = outputs.argmax(axis=-1) #TODO: check if it does use numpys argmax?
+    return accuracy.compute(predictions=predictions, references=labels)
+
+data_collator = transformers.DataCollatorWithPadding(tokenizer)
+
+# Argument gives the number of steps of patience before early stopping
+early_stopping = transformers.EarlyStoppingCallback(
+    early_stopping_patience=5
+)
+
+```
+
+```python
+TODO: ANALYZE THIS
+
+from collections import defaultdict
+
+class LogSavingCallback(transformers.TrainerCallback):
+    def on_train_begin(self, *args, **kwargs):
+        self.logs = defaultdict(list)
+        self.training = True
+
+    def on_train_end(self, *args, **kwargs):
+        self.training = False
+
+    def on_log(self, args, state, control, logs, model=None, **kwargs):
+        if self.training:
+            for k, v in logs.items():
+                if k != "epoch" or v not in self.logs[k]:
+                    self.logs[k].append(v)
+
+training_logs = LogSavingCallback()
+```
+
+#### Trainer
+
+![trainer](out/cnn4/cnn4.png)
+
+* `model` is the CLASS of the model
+* `args` is the training arguments
+* `train_dataset` is the train split of the dataset
+* `eval_dataset` is the test split of the dataset
+* `compute_metrics` is the function made in evaluation block
+* `data_collator` is the call made to `transformers.DataCollatorWithPadding(tokenizer)`
+* `callbacks` array containing `early_stopping` requirement and `training_logs` logger for analysing the training processes
+
+### RESULTS
+
+Evaluate and print out the results
+
+```python
+eval_results = trainer.evaluate(dataset["test"])
+
+pprint(eval_results)
+
+print('Accuracy:', eval_results['eval_accuracy'])
+```
+
+```python
+
+%matplotlib inline
+import matplotlib.pyplot as plt
+
+def plot(logs, keys, labels):
+    values = sum([logs[k] for k in keys], [])
+    plt.ylim(max(min(values)-0.1, 0.0), min(max(values)+0.1, 1.0))
+    for key, label in zip(keys, labels):
+        plt.plot(logs["epoch"], logs[key], label=label)
+    plt.legend()
+    plt.show()
+
+plot(training_logs.logs, ["loss", "eval_loss"], ["Training loss", "Evaluation loss"])
+
+```

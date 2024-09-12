@@ -1,4 +1,4 @@
-@startuml flow5
+@startuml cnn3
 
 <style>
 activityDiagram {
@@ -47,5 +47,30 @@ partition CONFIGURE {
         end split
     end split
 }
-:TRAIN;
+split
+    partition TRAINING ARGUMENTS {
+        split
+            :learning_rate;
+        split again
+            :per_device_train_batch_size;
+        split again
+            :max_steps;
+        end split
+    }
+split again
+    partition EVALUATION {
+        :ACCURACY;
+        split
+            :data_collator;
+        split again
+            : early_stopping;
+        end split
+    }
+    split 
+    split again
+        :LOGGER;
+        stop;
+    end split
+end split
+:TRAINER;
 @enduml

@@ -1,0 +1,35 @@
+@startuml cnn1
+
+<style>
+activityDiagram {
+  BackgroundColor #FFFF00
+  BorderColor #33668E
+  FontColor #000000
+  FontName arial
+}
+
+document {
+   BackgroundColor gray
+}
+</style>
+start
+:BUILD MODEL;
+partition CNN Architecture {
+    split
+        :1 Token_ids to embeddings;
+    split again
+        :2 Number of filters;
+    split again
+        :3 Non-linearity;
+    split again
+        :4 Max Pooling;
+    split again
+        :5 Fully connected layer to two possible outputs;
+    split again
+        :6 Loss function;
+    end split
+    :FORWARD;
+}
+:CONFIGURE;
+:TRAIN;
+@enduml

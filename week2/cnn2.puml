@@ -1,4 +1,4 @@
-@startuml flow4
+@startuml cnn2
 
 <style>
 activityDiagram {
@@ -15,6 +15,7 @@ document {
 start
 :BUILD THE MODEL;
 partition CNN Architecture {
+    :INIT;
     split
         :1 Token_ids to embeddings;
     split again
@@ -30,6 +31,21 @@ partition CNN Architecture {
     end split
     :FORWARD;
 }
-:CONFIGURE;
+partition CONFIGURE {
+    split
+        :1 vocab_size;
+    split again
+        :2 num_labels;
+    split again
+        :3 optional parameters;
+        split
+        :1 embedding_dim;
+        split again
+        :2 filter_size;
+        split again
+        :3 num_filters;
+        end split
+    end split
+}
 :TRAIN;
 @enduml

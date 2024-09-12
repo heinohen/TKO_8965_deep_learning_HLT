@@ -24,7 +24,11 @@ split again
 end split
 :3 TOKENIZE AND VECTORIZE;
 split
-    :3A Use AutoTokenizer from transformers, load model from hf;
-    :3B Create function to tokenize all texts in dataset;
-    :3C Run all dataset entries through the tokenizer with .map();
+   :3A Use AutoTokenizer from transformers, load model from hf;
+split again
+   :3B Create function to tokenize all texts in dataset;
+split again
+   :3C Run all dataset entries through the tokenizer with .map();
+end split
+:BUILD MODEL;
 @enduml
