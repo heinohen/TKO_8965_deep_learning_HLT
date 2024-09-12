@@ -2,7 +2,7 @@
 
 Your task is to carefully study the notebooks, and write a step-by-step summary of key steps to train and evaluate such a model. Keep in mind that many of these steps will be applicable throughout the course, even if the specific model differs. Therefore, it is essential to grasp the key concepts. As most of the code is shared in these two notebooks, writing just one summary is enough, but in the model building part, you should refer to both CNN/RNN implementations.
 
-<img src="out/full/full.png" alt="full" width="600" height="800" />
+<img src="out/full/full.png" alt="full" width="900" height="800" />
 
 ## 1 Install and import
 
@@ -117,9 +117,9 @@ dataset = dataset.map(tokenizer)
 
 ## 4 BUILD, CONFIGURE, TRAIN
 
-CNN STARTS HERE
-
 ### CNN
+
+#### MODEL
 
 ![image info](out/cnn1/cnn1.png)
 
@@ -187,9 +187,22 @@ BasicConfig = transformers.PretrainedConfig #nice way to start
 
 * `forward` passes to the next layer or returns output
 
-### CONFIGURE
+
+#### CNN CONFIGURE
 
 ![image info](out/cnn2/cnn2.png)
+
+```python
+config = BasicConfig(
+    vocab_size = tokenizer.vocab_size,
+    num_labels = len(set(dataset['train']['label'])),
+    embedding_dim = 64,
+    filter_size = 3,
+    num_filters = 10,
+)
+
+model = SimpleCNN(config)
+```
 
 1) `vocab_size` is always the size of the tokenizer
 2) `num_labels` is *number of unique labels* in the data
@@ -198,6 +211,135 @@ BasicConfig = transformers.PretrainedConfig #nice way to start
     * `filter_size` the size of the convolution filter (for picture think of height x width window) here only one dimension height (*n-grams*)
     ![ngram](ngram.png)
     * `num_filters` COUNT of different convolution filters
+
+
+### RNN
+
+#### RNN MODEL
+
+![rnn1](out/rnn1/rnn1.png)
+
+##### init
+
+```python
+import torch
+BasicConfig = transformers.PretrainedConfig #nice way to start
+```
+
+1) Token id's are mapped to embeddings of a user-specific size defined in `config.embedding_dim` parameter in a in a [torch.nn.Embedding](https://pytorch.org/docs/stable/generated/torch.nn.Embedding.html) layer. Weights initialized randomly
+
+    ```python
+        self.embeddings = torch.nn.Embedding(
+            num_embeddings=config.vocab_size,
+            embedding_dim=config.embedding_dim
+        )
+    ```
+
+2) Embedded imputs are passed through an RNN ([torch.nn.RNN](https://pytorch.org/docs/stable/generated/torch.nn.RNN.html)) which produces a series of outputs ($(y_1, \ldots, y_n)$, where $n$ is the length of the input) and the final hidden state $h_n$. Here, we will only use the last output $y_n$.
+
+    ```python
+    self.rnn = torch.nn.RNN(
+        input_size=config.embedding_dim,
+        hidden_size=config.hidden_size,
+        num_layers=config.num_layers,
+        nonlinearity=config.nonlinearity,
+        batch_first=True
+    )
+    ```
+
+3) The output of RNN is connected to fully connected layer ([torch.nn.Linear](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html)) that maps the last RNN output to the two possible values of the classifier
+
+    ```python
+    self.output_layer = torch.nn.Linear(
+        in_features=config.hidden_size,
+        out_features=config.num_labels #desired amount of labels
+    )
+    ```
+
+4) Classification is run through a loss function
+
+    ```python
+    self.loss = torch.nn.CrossEntropyLoss() #same as CNN
+    ```
+
+##### Forward
+
+For RNN the `forward` function acts a little different from CNN where it only goes *forward*
+
+1) Embed the ids
+
+    ```python
+    x = self.embeddings(input_ids) 
+    ```
+
+2) set the size of the batch to x
+
+    ```python
+    batch_size = x.shape[0]
+    ```
+
+3) set the initial hidden state to zeroes
+
+    ```python
+    h0 = torch.zeroes((self.config.num_layers, batch_size, self.config.hidden_size),
+        device=input_ids.device    # place on same device as input
+    )
+    ```
+
+4) Run RNN repeatedly to get sequence of outputs `rnn_outputs` and the final hidden state `h_n`
+
+    ```python
+    rnn_outputs, h_n = self.rnn(x,h0)
+    ```
+
+5) Get the last output `y_n`
+
+    ```python
+    # get the actual last output
+    y_n = rnn.outputs[:,-1,:]
+    ```
+
+6) Map to outputs with fully connected layer
+
+    ```python
+    output = self.output_layer(y_n)
+    ```
+
+7) Return as in MLP or CNN
+
+    ```python
+    # Return value computed as in MLP and CNN:
+        if labels is not None:
+            # We have labels, so we can calculate the loss
+            return (self.loss(output,labels), output)
+        else:
+            # No labels, so just return the output
+            return (output,)
+    ```
+
+#### RNN CONFIGURE
+
+![rnn2](out/rnn2/rnn1.png)
+
+```python
+config = BasicConfig(
+    vocab_size = tokenizer.vocab_size,
+    num_labels = len(set(dataset["train"]["label"])),
+    embedding_dim = 64,
+    hidden_size = 96,
+    num_layers = 1,
+    nonlinearity = "tanh",
+)
+
+model = SimpleRNN(config)
+```
+
+1) `vocab_size` always the vocabulary size of the tokenizer
+2) `num_labels` desired amount of labels
+3) `embedding_dim` size of word (== token) embeddings
+4) `hidden_size` size of the hidden `h` vector of RNN
+5) `num_layers` number of stacked RNN layers
+6) `nonlinearity` the non-linear function to apply, here `tanh` is chosen
 
 ### TRAIN
 

@@ -1,0 +1,91 @@
+@startuml rnn3
+
+<style>
+activityDiagram {
+  BackgroundColor #FFFF00
+  BorderColor #33668E
+  FontColor #000000
+  FontName arial
+}
+
+document {
+   BackgroundColor gray
+}
+</style>
+start
+:BUILD MODEL;
+partition #lightgreen RNN Architecture {
+    partition #lightgreen INIT {
+    split
+        :1 Token_ids to embeddings;
+    split again
+        :2 RNN;
+    split again
+        :3 Fully connected layer to two outputs;
+    split again
+        :4 Loss function;
+    end split
+    }
+    partition #lightgreen FORWARD {
+        split
+        :1 embed the ids;
+        split again
+        :2 batch_size;
+        split again
+        :3 h0;
+        split again
+        :4 Run rnn;
+        split again
+        :5 y_n;
+        split again
+        :6 output;
+        split again
+        end split
+        :Return value as in MLP or CNN;
+    } 
+}
+partition #lightgreen CONFIGURE {
+    split
+        :1 vocab_size;
+    split again
+        :2 num_labels;
+    split again
+        :3 optional parameters;
+        split
+        :1 embedding_dim;
+        split again
+        :2 hidden_size;
+        split again
+        :3 num_layers;
+        split again
+        :4 nonlinearity;
+        end split
+    end split
+}
+split
+    partition #lightgreen TRAINING ARGUMENTS {
+        split
+            :learning_rate;
+        split again
+            :per_device_train_batch_size;
+        split again
+            :max_steps;
+        end split
+    }
+split again
+    partition #lightgreen EVALUATION {
+        :ACCURACY;
+        split
+            :data_collator;
+        split again
+            : early_stopping;
+        end split
+    }
+    split 
+    split again
+        :LOGGER;
+        stop;
+    end split
+end split
+:TRAINER;
+@enduml

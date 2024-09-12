@@ -14,8 +14,8 @@ document {
 </style>
 start
 :BUILD THE MODEL;
-partition CNN Architecture {
-    :INIT;
+partition #LightBlue CNN Architecture {
+    partition #LightBlue INIT {
     split
         :1 Token_ids to embeddings;
     split again
@@ -29,9 +29,12 @@ partition CNN Architecture {
     split again
         :6 Loss function;
     end split
-    :FORWARD;
+    }
+    partition #LightBlue FORWARD{
+        :return labels;
+    }
 }
-partition CONFIGURE {
+partition #LightBlue CONFIGURE {
     split
         :1 vocab_size;
     split again

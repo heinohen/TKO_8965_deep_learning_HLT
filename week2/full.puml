@@ -30,7 +30,8 @@ split again
    :3C Run all dataset entries through the tokenizer with .map();
 end split
 :BUILD MODEL;
-partition CNN Architecture {
+split
+partition #LightBlue CNN Architecture {
     split
         :1 Token_ids to embeddings;
     split again
@@ -46,7 +47,7 @@ partition CNN Architecture {
     end split
     :FORWARD;
 }
-partition CONFIGURE {
+partition #LightBlue CONFIGURE {
     split
         :1 vocab_size;
     split again
@@ -62,6 +63,57 @@ partition CONFIGURE {
         end split
     end split
 }
+split again
+partition #lightgreen RNN Architecture {
+    partition #lightgreen INIT {
+    split
+        :1 Token_ids to embeddings;
+    split again
+        :2 RNN;
+    split again
+        :3 Fully connected layer to two outputs;
+    split again
+        :4 Loss function;
+    end split
+    }
+    partition #lightgreen FORWARD {
+        split
+        :1 embed the ids;
+        split again
+        :2 batch_size;
+        split again
+        :3 h0;
+        split again
+        :4 Run rnn;
+        split again
+        :5 y_n;
+        split again
+        :6 output;
+        split again
+        end split
+        :Return value as in MLP or CNN;
+    } 
+}
+partition #lightgreen CONFIGURE {
+    split
+        :1 vocab_size;
+    split again
+        :2 num_labels;
+    split again
+        :3 optional parameters;
+        split
+        :1 embedding_dim;
+        split again
+        :2 hidden_size;
+        split again
+        :3 num_layers;
+        split again
+        :4 nonlinearity;
+        end split
+    end split
+}
+'FULLY LAST 
+end split
 split
     partition TRAINING ARGUMENTS {
         split
@@ -109,4 +161,5 @@ partition TRAINER {
     end split
 }
 :RESULTS;
+:DONE;
 @enduml
