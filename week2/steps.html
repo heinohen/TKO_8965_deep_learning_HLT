@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>steps.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="deep-learning-week2-exercise-1">Deep learning week2 exercise 1</h1>
+<head>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<p>Your task is to carefully study the notebooks, and write a step-by-step summary of key steps to train and evaluate such a model. Keep in mind that many of these steps will be applicable throughout the course, even if the specific model differs. Therefore, it is essential to grasp the key concepts. As most of the code is shared in these two notebooks, writing just one summary is enough, but in the model building part, you should refer to both CNN/RNN implementations.</p>
+<img src="out/full/full.png" alt="full" width="900" height="800" />
+<h2 id="1-install-and-import">1 Install and import</h2>
+<p><img src="out/flow1/flow1.png" alt="image info"></p>
+<p>Setup</p>
+<p>in this phase install via pip:</p>
+<ul>
+<li><code>transformers</code> is a popular deep learning package</li>
+<li><code>datasets</code> provides support for loading, creating, and manipulating datasets</li>
+<li><code>evaluate</code> is a library for easily evaluating machine learning models and datasets</li>
+<li><code>accelerate</code> is a wrapper we need to install in order to train torch models using a transformers trainer</li>
+</ul>
+<p>install all of the above:</p>
+<pre class="hljs"><code><div>!pip3 install -q transformers datasets evaluate accelerate
+</div></code></pre>
+<ul>
+<li><code>pprint</code> to formulate prints for some data structures</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> pprint <span class="hljs-keyword">import</span> PrettyPrinter
+pprint = PrettyPrinter(compact=<span class="hljs-literal">True</span>).pprint
+</div></code></pre>
+<ul>
+<li><code>logging</code>  to reduce <code>transformers</code> verbose logging ops. Remove this to get all low level info also</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> logging
+logging.disable(logging.INFO)
+</div></code></pre>
+<h2 id="2-download-and-prepare-data">2 Download and prepare data</h2>
+<p><img src="out/flow2/flow2.png" alt="image info"></p>
+<h3 id="2a-download-huggingface-dataset">2A Download huggingface dataset</h3>
+<ul>
+<li>Import <code>datasets</code> and download for example the imdb dataset from huggingface</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> datasets
+<span class="hljs-comment">#https://huggingface.co/docs/datasets/main/en/package_reference/loading_methods#datasets.load_dataset</span>
+dataset = datasets.load_dataset(<span class="hljs-string">"imdb"</span>)
+</div></code></pre>
+<ul>
+<li>Check the quality / splits</li>
+</ul>
+<pre class="hljs"><code><div>print(dataset)
+
+DatasetDict({
+    train: Dataset({
+        features: [<span class="hljs-string">'text'</span>, <span class="hljs-string">'label'</span>],
+        num_rows: <span class="hljs-number">25000</span>
+    })
+    test: Dataset({
+        features: [<span class="hljs-string">'text'</span>, <span class="hljs-string">'label'</span>],
+        num_rows: <span class="hljs-number">25000</span>
+    })
+    unsupervised: Dataset({
+        features: [<span class="hljs-string">'text'</span>, <span class="hljs-string">'label'</span>],
+        num_rows: <span class="hljs-number">50000</span>
+    })
+})
+</div></code></pre>
+<h3 id="2b-shuffle-the-data">2B Shuffle the data</h3>
+<ul>
+<li>Shuffle</li>
+</ul>
+<pre class="hljs"><code><div>dataset = dataset.shuffle() <span class="hljs-comment">#This is never a bad idea, datasets may have ordering to them, which is not what we want</span>
+<span class="hljs-comment">#del dataset["unsupervised"] Delete the unlabeled part of the dataset to make things faster</span>
+</div></code></pre>
+<h2 id="3-tokenize-and-vectorize">3 Tokenize and vectorize</h2>
+<p><img src="out/flow3/flow3.png" alt="image info"></p>
+<h3 id="3a">3A</h3>
+<ul>
+<li>Import transformers</li>
+<li>Models are listed at <a href="https://huggingface.co/models">https://huggingface.co/models</a></li>
+<li>Assing pretrained AutoTokenizer to variable</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> transformers
+
+<span class="hljs-comment"># Text in IMDB dataset in english, use the bert-cased</span>
+MODEL = <span class="hljs-string">"bert-base-cased"</span>
+tokenizer = transformers.AutoTokenizer.from_pretrained(MODEL)
+</div></code></pre>
+<h3 id="3b">3B</h3>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tokenizer</span><span class="hljs-params">(dataset_entry: dict)</span> --&gt; dict:</span>
+    <span class="hljs-keyword">return</span> tokenizer(dataset_entry[<span class="hljs-string">"text"</span>],
+                    max_length=<span class="hljs-number">128</span>, <span class="hljs-comment">#limits the maximum length of outputs to the given length</span>
+                    truncation=<span class="hljs-literal">True</span>) <span class="hljs-comment"># faster train and potential performance gains</span>
+</div></code></pre>
+<h3 id="3c">3C</h3>
+<pre class="hljs"><code><div><span class="hljs-comment"># https://huggingface.co/docs/transformers/preprocessing#everything-you-always-wanted-to-know-about-padding-and-truncation</span>
+dataset = dataset.map(tokenizer)
+</div></code></pre>
+<h2 id="4-build-configure-train">4 BUILD, CONFIGURE, TRAIN</h2>
+<h3 id="cnn">CNN</h3>
+<h4 id="model">MODEL</h4>
+<p><img src="out/cnn1/cnn1.png" alt="image info"></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> torch
+BasicConfig = transformers.PretrainedConfig <span class="hljs-comment">#nice way to start</span>
+</div></code></pre>
+<ol>
+<li>
+<p>Token IDs are mapped to embeddings of a user-specific size (<code>config.embedding_dim</code>) in a <a href="https://pytorch.org/docs/stable/generated/torch.nn.Embedding.html">torch.nn.Embedding</a> layer. Typically initialized with previously leanerd weights, here starts with random</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># SELF HERE MEANS THE MODEL CLASS, ALL COMES TOGETHER IN THE END UNDER ONE CLASS :-)</span>
+<span class="hljs-comment"># Embedding layer: vocab size x embedding dim</span>
+self.embeddings = torch.nn.Embedding(
+    num_embeddings=config.vocab_size,
+    embedding_dim=config.embedding_dim
+)
+</div></code></pre>
+</li>
+<li>
+<p>Number of filters, specified by the user is applied to the matrix formed by the sequence of token embedding in a convolution layer (<em>think these filters with the image example</em>)</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Convolution layer:</span>
+self.convolution = torch.nn.Conv1d(
+    config.embedding_dim,
+    config.num_filters,
+    config.filter_size,
+    padding=<span class="hljs-number">1</span>
+    )
+</div></code></pre>
+</li>
+<li>
+<p>The outputs of the convolution layers are passed through a non-linear activation function. ere the simple ReLU (<a href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html">torch.nn.ReLU</a>) which thresholds each value at 0 ($\textrm{max}(0,x)$, i.e. any value &lt; 0 is set to 0)</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Activation function following convolution</span>
+self.activation = torch.nn.ReLU()
+</div></code></pre>
+</li>
+<li>
+<p>The outputs are max-pooled globally using <a href="https://pytorch.org/docs/stable/generated/torch.nn.AdaptiveMaxPool1d.html">torch.nn.AdaptiveMaxPool1d</a>, taking only the largest value output by each of the filters (after the activation function). Generaters translational invariance: the pooled output contains information on how well each filter &quot;matched&quot; the input, but not where that &quot;match&quot; was found.</p>
+<blockquote>
+<p>Translational invariance, means that a model will produce the same result for a given input image, regardless of where the features are located within the image. CNNs are invariant to small translation of features within an image, and this is due to the use of max-pooling operations.
+<a href="https://www.sciencedirect.com/topics/computer-science/translational-invariance">source</a> -- HERE IMAGE EXAMPLE IS USED BUT SAME FOR TEXT --</p>
+</blockquote>
+<pre class="hljs"><code><div><span class="hljs-comment"># Pooling layer: global max pooling, regardless of input length</span>
+    self.pooling_layer = torch.nn.AdaptiveMaxPool1d(
+        output_size=<span class="hljs-number">1</span>
+    )
+</div></code></pre>
+</li>
+<li>
+<p>Fully connected layer (<a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">torch.nn.Linear</a>) that maps the pooled values to the two possible output values</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Output layer: num filters to output size</span>
+    self.output_layer = torch.nn.Linear(
+        in_features=config.num_filters,
+        out_features=config.num_labels
+    )
+</div></code></pre>
+</li>
+<li>
+<p>Loss function of the classification: <a href="https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">torch.nn.CrossEntropyLoss</a></p>
+<pre class="hljs"><code><div>self.loss = torch.nn.CrossEntropyLoss()
+</div></code></pre>
+</li>
+</ol>
+<ul>
+<li><code>forward</code> passes to the next layer or returns output</li>
+</ul>
+<h4 id="cnn-configure">CNN CONFIGURE</h4>
+<p><img src="out/cnn2/cnn2.png" alt="image info"></p>
+<pre class="hljs"><code><div>config = BasicConfig(
+    vocab_size = tokenizer.vocab_size,
+    num_labels = len(set(dataset[<span class="hljs-string">'train'</span>][<span class="hljs-string">'label'</span>])),
+    embedding_dim = <span class="hljs-number">64</span>,
+    filter_size = <span class="hljs-number">3</span>,
+    num_filters = <span class="hljs-number">10</span>,
+)
+
+model = SimpleCNN(config)
+</div></code></pre>
+<ol>
+<li><code>vocab_size</code> is always the size of the tokenizer</li>
+<li><code>num_labels</code> is <em>number of unique labels</em> in the data</li>
+<li><code>optional</code> are adjustable hyperparameters of which:
+<ul>
+<li><code>embedding_dim</code> is the size of the word embeddings (token)</li>
+<li><code>filter_size</code> the size of the convolution filter (for picture think of height x width window) here only one dimension height (<em>n-grams</em>)
+<img src="ngram.png" alt="ngram"></li>
+<li><code>num_filters</code> COUNT of different convolution filters</li>
+</ul>
+</li>
+</ol>
+<h3 id="rnn">RNN</h3>
+<h4 id="rnn-model">RNN MODEL</h4>
+<p><img src="out/rnn1/rnn1.png" alt="rnn1"></p>
+<h5 id="init">init</h5>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> torch
+BasicConfig = transformers.PretrainedConfig <span class="hljs-comment">#nice way to start</span>
+</div></code></pre>
+<ol>
+<li>
+<p>Token id's are mapped to embeddings of a user-specific size defined in <code>config.embedding_dim</code> parameter in a in a <a href="https://pytorch.org/docs/stable/generated/torch.nn.Embedding.html">torch.nn.Embedding</a> layer. Weights initialized randomly</p>
+<pre class="hljs"><code><div>    self.embeddings = torch.nn.Embedding(
+        num_embeddings=config.vocab_size,
+        embedding_dim=config.embedding_dim
+    )
+</div></code></pre>
+</li>
+<li>
+<p>Embedded imputs are passed through an RNN (<a href="https://pytorch.org/docs/stable/generated/torch.nn.RNN.html">torch.nn.RNN</a>) which produces a series of outputs ($(y_1, \ldots, y_n)$, where $n$ is the length of the input) and the final hidden state $h_n$. Here, we will only use the last output $y_n$.</p>
+<pre class="hljs"><code><div>self.rnn = torch.nn.RNN(
+    input_size=config.embedding_dim,
+    hidden_size=config.hidden_size,
+    num_layers=config.num_layers,
+    nonlinearity=config.nonlinearity,
+    batch_first=<span class="hljs-literal">True</span>
+)
+</div></code></pre>
+</li>
+<li>
+<p>The output of RNN is connected to fully connected layer (<a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">torch.nn.Linear</a>) that maps the last RNN output to the two possible values of the classifier</p>
+<pre class="hljs"><code><div>self.output_layer = torch.nn.Linear(
+    in_features=config.hidden_size,
+    out_features=config.num_labels <span class="hljs-comment">#desired amount of labels</span>
+)
+</div></code></pre>
+</li>
+<li>
+<p>Classification is run through a loss function</p>
+<pre class="hljs"><code><div>self.loss = torch.nn.CrossEntropyLoss() <span class="hljs-comment">#same as CNN</span>
+</div></code></pre>
+</li>
+</ol>
+<h5 id="forward">Forward</h5>
+<p>For RNN the <code>forward</code> function acts a little different from CNN where it only goes <em>forward</em></p>
+<ol>
+<li>
+<p>Embed the ids</p>
+<pre class="hljs"><code><div>x = self.embeddings(input_ids) 
+</div></code></pre>
+</li>
+<li>
+<p>set the size of the batch to x</p>
+<pre class="hljs"><code><div>batch_size = x.shape[<span class="hljs-number">0</span>]
+</div></code></pre>
+</li>
+<li>
+<p>set the initial hidden state to zeroes</p>
+<pre class="hljs"><code><div>h0 = torch.zeroes((self.config.num_layers, batch_size, self.config.hidden_size),
+    device=input_ids.device    <span class="hljs-comment"># place on same device as input</span>
+)
+</div></code></pre>
+</li>
+<li>
+<p>Run RNN repeatedly to get sequence of outputs <code>rnn_outputs</code> and the final hidden state <code>h_n</code></p>
+<pre class="hljs"><code><div>rnn_outputs, h_n = self.rnn(x,h0)
+</div></code></pre>
+</li>
+<li>
+<p>Get the last output <code>y_n</code></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># get the actual last output</span>
+y_n = rnn.outputs[:,<span class="hljs-number">-1</span>,:]
+</div></code></pre>
+</li>
+<li>
+<p>Map to outputs with fully connected layer</p>
+<pre class="hljs"><code><div>output = self.output_layer(y_n)
+</div></code></pre>
+</li>
+<li>
+<p>Return as in MLP or CNN</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Return value computed as in MLP and CNN:</span>
+    <span class="hljs-keyword">if</span> labels <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:
+        <span class="hljs-comment"># We have labels, so we can calculate the loss</span>
+        <span class="hljs-keyword">return</span> (self.loss(output,labels), output)
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-comment"># No labels, so just return the output</span>
+        <span class="hljs-keyword">return</span> (output,)
+</div></code></pre>
+</li>
+</ol>
+<h4 id="rnn-configure">RNN CONFIGURE</h4>
+<p><img src="out/rnn2/rnn1.png" alt="rnn2"></p>
+<pre class="hljs"><code><div>config = BasicConfig(
+    vocab_size = tokenizer.vocab_size,
+    num_labels = len(set(dataset[<span class="hljs-string">"train"</span>][<span class="hljs-string">"label"</span>])),
+    embedding_dim = <span class="hljs-number">64</span>,
+    hidden_size = <span class="hljs-number">96</span>,
+    num_layers = <span class="hljs-number">1</span>,
+    nonlinearity = <span class="hljs-string">"tanh"</span>,
+)
+
+model = SimpleRNN(config)
+</div></code></pre>
+<ol>
+<li><code>vocab_size</code> always the vocabulary size of the tokenizer</li>
+<li><code>num_labels</code> desired amount of labels</li>
+<li><code>embedding_dim</code> size of word (== token) embeddings</li>
+<li><code>hidden_size</code> size of the hidden <code>h</code> vector of RNN</li>
+<li><code>num_layers</code> number of stacked RNN layers</li>
+<li><code>nonlinearity</code> the non-linear function to apply, here <code>tanh</code> is chosen</li>
+</ol>
+<h3 id="train">TRAIN</h3>
+<p><img src="out/cnn3/cnn3.png" alt="traing"></p>
+<h4 id="training-arguments">Training arguments</h4>
+<p>Use hf <code>trainer</code> class</p>
+<p>workflow:</p>
+<ul>
+<li>load the arguments that control the training</li>
+<li>configurable metrics to evaluate performance</li>
+<li>data collator builds the batches</li>
+<li>early stopping callback stops when eval loss no longer improves</li>
+</ul>
+<p>Specify hyperparamenters and other settings for training</p>
+<ul>
+<li><code>learning_rate</code> the step size for weight updates</li>
+<li><code>per_device_train_batch_size</code> number of examples per batch</li>
+<li><code>max_steps</code> the max number of steps to train for</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment"># https://huggingface.co/docs/transformers/en/main_classes/trainer</span>
+trainer_args = transformers.TrainingArguments(
+    <span class="hljs-string">"checkpoints"</span>,
+    evaluation_strategy=<span class="hljs-string">"steps"</span>,
+    <span class="hljs-string">"""
+    eval_strategy (str or IntervalStrategy, optional, defaults to "no") — The evaluation strategy to adopt during training. Possible values are:
+    "no": No evaluation is done during training.
+    "steps": Evaluation is done (and logged) every eval_steps.
+    "epoch": Evaluation is done at the end of each epoch.
+    """</span>
+    logging_strategy=<span class="hljs-string">"steps"</span>,
+    <span class="hljs-string">"""
+    logging_strategy (str or IntervalStrategy, optional, defaults to "steps") — The logging strategy to adopt during training. Possible values are:
+
+    "no": No logging is done during training.
+    "epoch": Logging is done at the end of each epoch.
+    "steps": Logging is done every logging_steps.
+    """</span>
+    load_best_model_at_end=<span class="hljs-literal">True</span>,
+    <span class="hljs-string">"""
+    (bool, optional, defaults to False) — Whether or not to load the best model found during training at the end of training. When this option is enabled, the best checkpoint will always be saved. See save_total_limit for more.
+    """</span>
+    eval_steps=<span class="hljs-number">500</span>,
+    <span class="hljs-string">"""
+    (int or float, optional) — Number of update steps between two evaluations if eval_strategy="steps". Will default to the same value as logging_steps if not set. Should be an integer or a float in range [0,1). If smaller than 1, will be interpreted as ratio of total training steps.
+    """</span>
+    logging_steps=<span class="hljs-number">500</span>,
+    <span class="hljs-string">"""
+    (int or float, optional, defaults to 500) — Number of update steps between two logs if logging_strategy="steps". Should be an integer or a float in range [0,1). If smaller than 1, will be interpreted as ratio of total training steps.
+    """</span>
+    learning_rate=<span class="hljs-number">0.001</span>,
+    <span class="hljs-string">"""
+    (float, optional, defaults to 5e-5) — The initial learning rate for AdamW optimizer.
+    """</span>
+    per_device_train_batch_size=<span class="hljs-number">8</span>,
+    <span class="hljs-string">"""
+    (int, optional, defaults to 8) — The batch size per GPU/XPU/TPU/MPS/NPU core/CPU for training.
+    """</span>
+    max_steps=<span class="hljs-number">2500</span>,
+    <span class="hljs-string">"""
+    (int, optional, defaults to -1) — If set to a positive number, the total number of training steps to perform. Overrides num_train_epochs. For a finite dataset, training is reiterated through the dataset (if all data is exhausted) until max_steps is reached.
+    """</span>
+)
+</div></code></pre>
+<h4 id="evaluation">Evaluation</h4>
+<p>Create metric for evaluation of performance during and after training.</p>
+<pre class="hljs"><code><div><span class="hljs-comment">#https://pypi.org/project/evaluate/</span>
+<span class="hljs-keyword">import</span> evaluate
+
+<span class="hljs-comment">#https://huggingface.co/spaces/evaluate-metric/accuracy</span>
+<span class="hljs-comment">#Accuracy = (TP + TN) / (TP + TN + FP + FN)</span>
+accuracy = evaluate.load(<span class="hljs-string">"accuracy"</span>)
+<span class="hljs-string">"""
+to instantiate an evaluation module
+"""</span>
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">compute_accuracy</span><span class="hljs-params">(outputs_and_labels)</span>:</span>
+    outputs, labels = outputs_and_labels
+    predictions = outputs.argmax(axis=<span class="hljs-number">-1</span>) <span class="hljs-comment">#<span class="hljs-doctag">TODO:</span> check if it does use numpys argmax?</span>
+    <span class="hljs-keyword">return</span> accuracy.compute(predictions=predictions, references=labels)
+
+data_collator = transformers.DataCollatorWithPadding(tokenizer)
+
+<span class="hljs-comment"># Argument gives the number of steps of patience before early stopping</span>
+early_stopping = transformers.EarlyStoppingCallback(
+    early_stopping_patience=<span class="hljs-number">5</span>
+)
+
+</div></code></pre>
+<pre class="hljs"><code><div>TODO: ANALYZE THIS
+
+<span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> defaultdict
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LogSavingCallback</span><span class="hljs-params">(transformers.TrainerCallback)</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_train_begin</span><span class="hljs-params">(self, *args, **kwargs)</span>:</span>
+        self.logs = defaultdict(list)
+        self.training = <span class="hljs-literal">True</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_train_end</span><span class="hljs-params">(self, *args, **kwargs)</span>:</span>
+        self.training = <span class="hljs-literal">False</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_log</span><span class="hljs-params">(self, args, state, control, logs, model=None, **kwargs)</span>:</span>
+        <span class="hljs-keyword">if</span> self.training:
+            <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">in</span> logs.items():
+                <span class="hljs-keyword">if</span> k != <span class="hljs-string">"epoch"</span> <span class="hljs-keyword">or</span> v <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> self.logs[k]:
+                    self.logs[k].append(v)
+
+training_logs = LogSavingCallback()
+</div></code></pre>
+<h4 id="trainer">Trainer</h4>
+<p><img src="out/cnn4/cnn4.png" alt="trainer"></p>
+<ul>
+<li><code>model</code> is the CLASS of the model</li>
+<li><code>args</code> is the training arguments</li>
+<li><code>train_dataset</code> is the train split of the dataset</li>
+<li><code>eval_dataset</code> is the test split of the dataset</li>
+<li><code>compute_metrics</code> is the function made in evaluation block</li>
+<li><code>data_collator</code> is the call made to <code>transformers.DataCollatorWithPadding(tokenizer)</code></li>
+<li><code>callbacks</code> array containing <code>early_stopping</code> requirement and <code>training_logs</code> logger for analysing the training processes</li>
+</ul>
+<h3 id="results">RESULTS</h3>
+<p>Evaluate and print out the results</p>
+<pre class="hljs"><code><div>eval_results = trainer.evaluate(dataset[<span class="hljs-string">"test"</span>])
+
+pprint(eval_results)
+
+print(<span class="hljs-string">'Accuracy:'</span>, eval_results[<span class="hljs-string">'eval_accuracy'</span>])
+</div></code></pre>
+<pre class="hljs"><code><div>
+%matplotlib inline
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">plot</span><span class="hljs-params">(logs, keys, labels)</span>:</span>
+    values = sum([logs[k] <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> keys], [])
+    plt.ylim(max(min(values)<span class="hljs-number">-0.1</span>, <span class="hljs-number">0.0</span>), min(max(values)+<span class="hljs-number">0.1</span>, <span class="hljs-number">1.0</span>))
+    <span class="hljs-keyword">for</span> key, label <span class="hljs-keyword">in</span> zip(keys, labels):
+        plt.plot(logs[<span class="hljs-string">"epoch"</span>], logs[key], label=label)
+    plt.legend()
+    plt.show()
+
+plot(training_logs.logs, [<span class="hljs-string">"loss"</span>, <span class="hljs-string">"eval_loss"</span>], [<span class="hljs-string">"Training loss"</span>, <span class="hljs-string">"Evaluation loss"</span>])
+
+</div></code></pre>
+
+</body>
+</html>

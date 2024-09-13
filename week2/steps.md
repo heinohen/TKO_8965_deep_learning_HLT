@@ -1,5 +1,9 @@
 # Deep learning week2 exercise 1
 
+<head>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
 Your task is to carefully study the notebooks, and write a step-by-step summary of key steps to train and evaluate such a model. Keep in mind that many of these steps will be applicable throughout the course, even if the specific model differs. Therefore, it is essential to grasp the key concepts. As most of the code is shared in these two notebooks, writing just one summary is enough, but in the model building part, you should refer to both CNN/RNN implementations.
 
 <img src="out/full/full.png" alt="full" width="900" height="800" />
