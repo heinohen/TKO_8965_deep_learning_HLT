@@ -16,9 +16,10 @@
 \usepackage{subcaption}
 \usepackage{adjustbox}
 \usepackage{titlesec}
-\usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{lmodern,textcomp}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tabularx}
 
 
 
@@ -56,14 +57,46 @@ Deep learning in HLT, week 3, exercise 6}}
 %This service allows people to order daily goods and get them delivered at home
 
 \section{Which datasets are used in training and evaluation (size, language, etc.)?}
-WMT ’14 contains the following English-French parallel corpora. Europarl with 61M words, news commentary with 5.5M words, UN (United Nations) with 421M words and two crawled corporas with sizes of 90M and 272.5M words. Total words is 850M words which was reduced to final corpus of size 348M words.
+Dataset used was provided by ACL WMT ’14, which is a parallel corpora. It contains the following English-French parallel corpora: Europarl with 61M words, news commentary with 5.5M words, UN (United Nations) with 421M words and two crawled corporas with sizes of 90M and 272.5M words. Total words is 850M words which was reduced to final corpus of size 348M words.
+\verb|news-test-2012| and \verb|news-test-2013| parts of the corpora as validation data, this kind of protocol was suggested by the providors of the dataset. Testing was done on \verb|news-text-2014| which consists of 3003 sentences not present in the training data. Training of the model was based on tokenized dataset, training data consisted of 30,000 most frequent words in each language, with no special preprocessing to it. Languages used were English, French, Spanish, German, Czech, Russian, Hindi 
 
 
 
 \section{Which neural model architectures are evaluated in the paper?}
 Most of the proposed neural machine translation models belong to a family of encoder-decoders.
-one is an RNN Encoder–Decoder, the other is the proposed model of the paper called as RNNsearch
-
+The baseline model used in comparision is an RNN Encoder–Decoder with LSTM cell called RNNencdec. The proposed model by Bahdanau et al. contains bidirectional RNN as an encoder, attention layer, and RNN as decoder called RNNsearch from here on out.
+The research team trained two models from each architecture, one trained with sentences up to 30 words and one up to 50 words. RNNencdec contains 1000 hidden units in both encoder and decoder part. The RNNsearch has 2000 hidden units in encoder as it is bidirectional that comes up to 1000 hidden units per neural network, in the decoder part it has 1000 hidden layers. 
+Both models use multilayered networkd with a single maxout hidden layer to compute the conditional probability of each target word.
 \section{Briefly summarize the results and the used metric. Did the neural attention improve the results compared to the previously existing models?}
 
+\subsection{Quantitative results}
+
+Comparision of qualitative results was is based on performance measured in BLEU\footnote{\url{https://aclanthology.org/P02-1040.pdf}} score. BLEU score was used because it is shown to correlate with human judgement during translation from various languages to english.
+To interpret the BLEU scores metric i studied Google's documentation\footnote{\url{https://cloud.google.com/translate/automl/docs/evaluate}} and scale presentation attached in there\footnote{\url{https://www.cs.cmu.edu/\%7Ealavie/Presentations/MT-Evaluation-MT-Summit-Tutorial-19Sep11.pdf}}. This helps to summarize the results further.
+In page 5 of the whitepaper it is shown that RNNsearch-50 (new model with sentence length 50 words) holds steady $\sim$27 BLEU score for sentences up to 60 words, while other RNNsearch-30 starts to diminish after approx. 20 words. The both variations of RNNencdec peak at $\sim$22 BLEU before 20 words and start to diminish.
+
+To interpret BLUE scale i attached here related description from Google:
+
+\begin{tabularx}{0.8\textwidth} { 
+    | >{\raggedright\arraybackslash}X 
+    | >{\raggedleft\arraybackslash}X | }
+   \hline
+   BLEU score & Interpration \\
+   \hline
+   < 10  & Almost useless  \\
+   10 - 19 & Hard to get the gist \\
+   \hline
+   20 - 29 & The gist is clear, but has significant grammatical errors\\
+   \hline
+   30-40 & Understandable to good translation\\
+  \hline
+  \end{tabularx}
+
+
+Both models and variations were compared not only eachother but to Moses, which is a conventional phrase-based translation system. In training Moses uses a separate monolingual corpus consisting of 418M words \emph{in addition} to the parallel corpora used by RNNencdec and RNNsearch models.
+The performance of RNNsearch is on level with Moses' scores, and with no additional monolingual corpora used this is consideret significant achievement.
+
+\subsection{Qualitative results}
+
+By the result graphs attached in the paper page 6, it is clear to see visibile strong attention weighting between related words. The RNNsearch-50 was also much better than the novel version in translating long sentences and containing the information needed.
 \end{document}
