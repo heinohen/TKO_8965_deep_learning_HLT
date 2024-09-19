@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{letltxmacro}
+\usepackage{listings}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{bm}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[finnish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{adjustbox}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{lmodern,textcomp}
+
+
+
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\usepackage[
+textwidth=15.2cm,
+textheight=24.3cm,
+hmarginratio=1:1,
+vmarginratio=1:1]{geometry}
+
+\setlength{\parskip}{12pt}
+\setlength{\parindent}{0pt}
+
+
+
+\begin{document}
+
+
+
+\pagestyle{fancy}
+%... then configure it.
+\fancyhead{} % clear all header fields
+\fancyhead[R]{\textbf{Henrik Heinonen\\
+2213179\\
+Deep learning in HLT, week 3, exercise 6}}
+
+%Create a description of an imaginary but realistic persona that
+%could be used as a target user for an online daily goods shopping service.
+%This service allows people to order daily goods and get them delivered at home
+
+\section{Which datasets are used in training and evaluation (size, language, etc.)?}
+WMT ’14 contains the following English-French parallel corpora. Europarl with 61M words, news commentary with 5.5M words, UN (United Nations) with 421M words and two crawled corporas with sizes of 90M and 272.5M words. Total words is 850M words which was reduced to final corpus of size 348M words.
+
+
+
+\section{Which neural model architectures are evaluated in the paper?}
+Most of the proposed neural machine translation models belong to a family of encoder-decoders.
+one is an RNN Encoder–Decoder, the other is the proposed model of the paper called as RNNsearch
+
+\section{Briefly summarize the results and the used metric. Did the neural attention improve the results compared to the previously existing models?}
+
+\end{document}
